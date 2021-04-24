@@ -232,7 +232,7 @@ impl Instruction for JkString {
     fn execute(&self, ctx: &mut Context) -> Option<ObjectInstance> {
         ctx.debug("CONSTANT", &self.0.to_string());
 
-        let interpolated = JkString::from(JkStringFmt::interpolate(&self.0, ctx).unwrap());
+        let interpolated = JkString::from(JkStringFmt::interpolate(&self.0, ctx)?);
 
         Some(interpolated.to_instance())
     }
