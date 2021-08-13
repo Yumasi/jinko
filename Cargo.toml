@@ -16,3 +16,5 @@ colored = "2.0"
 nom = { version = "5.1", default-features = false }
 linefeed = "0.6"
 downcast-rs = "1.2"
+anyhow = "1.0"
+thiserror = "1.0"

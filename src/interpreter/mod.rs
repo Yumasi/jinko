@@ -50,12 +50,6 @@ pub struct Interpreter {
     included: HashSet<PathBuf>,
 }
 
-impl Default for Interpreter {
-    fn default() -> Interpreter {
-        Interpreter::new()
-    }
-}
-
 impl Interpreter {
     fn new_entry() -> FunctionDec {
         let mut ep = FunctionDec::new(String::from(ENTRY_NAME), None);
@@ -67,7 +61,7 @@ impl Interpreter {
     }
 
     /// Create a new empty interpreter. Starts in non-audit mode
-    pub fn new() -> Interpreter {
+    pub fn try_new() -> Result<Interpreter, JkError> {
         let mut i = Interpreter {
             in_audit: false,
             debug_mode: false,
@@ -89,10 +83,9 @@ impl Interpreter {
         let stdlib_incl =
             crate::instruction::Incl::new(String::from("stdlib"), Some(String::from("")));
         stdlib_incl
-            .execute(&mut i)
-            .expect("cannot include jinko's standard library - aborting");
+            .execute(&mut i)?;
 
-        i
+        Ok(i)
     }
 
     /// Get a rerference to an interpreter's source path

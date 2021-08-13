@@ -24,7 +24,7 @@ impl Parser {
     /// Parses the entire user input and returns a hashmap corresponding to the user
     /// program
     pub fn parse(input: &str) -> Result<Interpreter, JkError> {
-        let mut interpreter = Interpreter::new();
+        let mut interpreter = Interpreter::try_new()?;
 
         let entry_block = interpreter.entry_point.block_mut().unwrap();
 

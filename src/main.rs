@@ -46,31 +46,27 @@ fn handle_exit_code(result: InstrKind) {
     }
 }
 
-fn main() {
+fn main() -> Result<(), anyhow::Error> {
     let args = Args::handle();
 
     if args.interactive() || args.input().is_none() {
-        match Repl::launch_repl(&args) {
-            Ok(_) => return,
-            Err(e) => e.exit(),
-        }
-    };
+        Repl::launch_repl(&args)?;
+        return Ok(());
+    }
 
     // We can unwrap since we checked for `None` in the if
     let path = args.input().unwrap();
 
-    let input = fs::read_to_string(&path).unwrap();
+    let input = fs::read_to_string(&path)?;
 
-    // FIXME: No unwrap()
-    let mut interpreter = Parser::parse(&input).unwrap();
+    let mut interpreter = Parser::parse(&input)?;
 
     interpreter.set_path(Some(path.to_owned()));
     interpreter.set_debug(args.debug());
 
     // The entry point always has a block
     let ep = interpreter.entry_point.block().unwrap().clone();
-    match ep.execute(&mut interpreter) {
-        Ok(result) => handle_exit_code(result),
-        Err(e) => e.exit(),
-    }
+    handle_exit_code(ep.execute(&mut interpreter)?);
+
+    Ok(())
 }

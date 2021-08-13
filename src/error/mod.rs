@@ -2,6 +2,7 @@
 //! are used by the interpreter as well as the parser.
 
 use colored::Colorize;
+use thiserror::Error;
 
 /// What kind of error we are dealing with: Either a parsing error, or a behavioural one.
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -30,7 +31,7 @@ impl JkErrSpaceLocation {
 
 /// The actual error type
 // FIXME: Remove `Option` once input tracking is implemented
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Error)]
 pub struct JkError {
     kind: JkErrKind,
     msg: String,
