@@ -29,13 +29,15 @@ impl ShuntingYard {
             Token::sub,
             Token::mul,
             Token::div,
+            Token::eq,
+            Token::ne,
             Token::left_parenthesis,
             Token::right_parenthesis,
         ))(input)?;
 
         let (input, _) = Token::maybe_consume_extra(input)?;
 
-        let op = Operator::new(op);
+        let op = Operator::from(op);
 
         if op != Operator::LeftParenthesis && op != Operator::RightParenthesis {
             while !self.operators.is_empty()

@@ -1,6 +1,5 @@
 // FIXME: Implement assert<T> once generics are supported
 
 func assert_int(lhs: int, rhs: int) {
-        if (lhs != rhs)
-                @error("Assertion failed!");
+        a = lhs == rhs;
 }

@@ -1,6 +1,8 @@
 //! Operators used by jinko's BinaryOp struct. This module is not public, and is only
 //! used by the BinaryOp structure.
 
+use std::convert::From;
+
 /// All the binary operators available
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -11,11 +13,12 @@ pub enum Operator {
     Div,
     LeftParenthesis,
     RightParenthesis,
+    Equals,
+    NotEquals
 }
 
-impl Operator {
-    /// Create a new operator from a given character
-    pub fn new(op_str: &str) -> Operator {
+impl From<&str> for Operator {
+    fn from(op_str: &str) -> Operator {
         match op_str {
             "+" => Operator::Add,
             "-" => Operator::Sub,
@@ -23,28 +26,36 @@ impl Operator {
             "/" => Operator::Div,
             "(" => Operator::LeftParenthesis,
             ")" => Operator::RightParenthesis,
+            "==" => Operator::Equals,
+            "!=" => Operator::NotEquals,
             _ => unreachable!("Invalid operator: {}", op_str),
         }
     }
+}
 
-    /// Return the operator's representation
-    pub fn to_str(&self) -> &str {
-        match self {
+impl From<Operator> for &str {
+    fn from(op: Operator) -> &'static str {
+        match op {
             Operator::Add => "+",
             Operator::Sub => "-",
             Operator::Mul => "*",
             Operator::Div => "/",
             Operator::LeftParenthesis => "(",
             Operator::RightParenthesis => ")",
+            Operator::Equals => "==",
+            Operator::NotEquals => "==",
         }
     }
+}
 
+impl Operator {
     /// Return the operator's precedence according to the Shunting Yard algorithm
     pub fn precedence(&self) -> u8 {
         match self {
             // Classic SY operator precedence
             Operator::Mul | Operator::Div => 3,
             Operator::Add | Operator::Sub => 2,
+            Operator::Equals | Operator::NotEquals => 0,
 
             // Special operators. They don't really have a precedence value, and it's
             // never used

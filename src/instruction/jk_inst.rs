@@ -12,6 +12,7 @@ pub enum JkInstKind {
     Dump,
     Quit,
     Ir,
+    Error,
 }
 
 #[derive(Clone)]
@@ -22,13 +23,14 @@ pub struct JkInst {
 
 impl JkInst {
     /// Construct a `JkInst` from a `FunctionCall`
-    pub fn from_function_call(fc: FunctionCall) -> Result<Self, JkError> {
+    pub fn from_function_call(fc: FunctionCall) -> Result<JkInst, JkError> {
         let func_name = fc.name();
 
         let kind = match func_name {
             "dump" => JkInstKind::Dump,
             "quit" => JkInstKind::Quit,
             "ir" => JkInstKind::Ir,
+            "error" => JkInstKind::Error,
             // FIXME: Fix location
             _ => {
                 return Err(JkError::new(
@@ -62,6 +64,7 @@ impl Instruction for JkInst {
             JkInstKind::Dump => "@dump",
             JkInstKind::Quit => "@quit",
             JkInstKind::Ir => "@ir",
+            JkInstKind::Error => "@error",
         }
         .to_string()
     }
@@ -73,6 +76,10 @@ impl Instruction for JkInst {
             JkInstKind::Dump => println!("{}", interpreter.print()),
             JkInstKind::Quit => std::process::exit(0),
             JkInstKind::Ir => eprintln!("usage: {:?} <statement|expr>", JkInstKind::Ir),
+            JkInstKind::Error => {
+                self.args.iter().for_each(|arg| eprintln!("{}", arg.print()));
+                std::process::exit(1);
+            }
         };
 
         // JinkInsts cannot return anything. They simply act directly from the interpreter,

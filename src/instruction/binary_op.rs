@@ -78,10 +78,12 @@ impl Instruction for BinaryOp {
     }
 
     fn print(&self) -> String {
+        let op_str: &str = self.op.into();
+
         format!(
             "{} {} {}",
             self.lhs.print(),
-            self.op.to_str(),
+            op_str,
             self.rhs.print()
         )
     }
@@ -89,7 +91,8 @@ impl Instruction for BinaryOp {
     fn execute(&self, interpreter: &mut Interpreter) -> Result<InstrKind, JkError> {
         interpreter.debug_step("BINOP ENTER");
 
-        interpreter.debug("OP", self.op.to_str());
+        let op_str: &str = self.op.into();
+        interpreter.debug("OP", op_str);
 
         let l_value = self.execute_node(&*self.lhs, interpreter)?;
         let r_value = self.execute_node(&*self.rhs, interpreter)?;
@@ -100,7 +103,7 @@ impl Instruction for BinaryOp {
                 format!(
                     "Trying to do binary operation on invalid types: {:#?} {} {:#?}",
                     l_value.ty(),
-                    self.op.to_str(),
+                    op_str,
                     r_value.ty() // FIXME: Display correctly
                 ),
                 None, // FIXME: Fix Location

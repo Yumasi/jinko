@@ -172,6 +172,14 @@ impl Token {
         Token::token(input, "/")
     }
 
+    pub fn eq(input: &str) -> IResult<&str, &str> {
+        Token::token(input, "==")
+    }
+
+    pub fn ne(input: &str) -> IResult<&str, &str> {
+        Token::token(input, "!=")
+    }
+
     pub fn left_parenthesis(input: &str) -> IResult<&str, &str> {
         Token::token(input, "(")
     }
