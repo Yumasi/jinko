@@ -51,7 +51,7 @@ block = '{' next inner_block
 inner_block = expr ( ';' expr )* '}'
             | '}'
 
-function_declaration = next IDENTIFIER next '(' next typed_arg next return_type
+function_declaration = next IDENTIFIER [ next '<' IDENTIFIER ( ',' IDENTIFIER )* '>' ] next '(' next typed_arg next return_type
 return_type = '->' next IDENTIFIER next
             | ε
 
