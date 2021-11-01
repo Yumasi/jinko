@@ -86,6 +86,10 @@ impl Token {
         Token::specific_char(input, ',')
     }
 
+    pub fn pipe(input: &str) -> ParseResult<&str, char> {
+        Token::specific_char(input, '|')
+    }
+
     pub fn left_curly_bracket(input: &str) -> ParseResult<&str, char> {
         Token::specific_char(input, '{')
     }
